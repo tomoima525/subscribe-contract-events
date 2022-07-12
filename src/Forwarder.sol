@@ -39,6 +39,15 @@ contract Forwarder is Ownable, Pausable, EIP712 {
     event AddressWhitelisted(address indexed sender);
     event AddressRemovedFromWhitelist(address indexed sender);
 
+    //debug
+    event DebugVerify(
+        ForwardRequest req,
+        uint8 v,
+        bytes32 r,
+        bytes32 s,
+        address signer
+    );
+
     constructor(string memory name, string memory version)
         EIP712(name, version)
     {
@@ -99,6 +108,22 @@ contract Forwarder is Ownable, Pausable, EIP712 {
         return _nonces[req.from] == req.nonce && signer == req.from;
     }
 
+    function executeWithSignature(
+        ForwardRequest calldata req,
+        bytes memory signature
+    ) public payable whenNotPaused returns (bool, uint256) {
+        bytes32 r;
+        bytes32 s;
+        uint8 v;
+        assembly {
+            r := mload(add(signature, 0x20))
+            s := mload(add(signature, 0x40))
+            v := byte(0, mload(add(signature, 0x60)))
+        }
+        emit DebugVerify(req, v, r, s, msg.sender);
+        return execute(req, v, r, s);
+    }
+
     /// @dev Main function; executes the meta-transaction via a low-level call.
     function execute(
         ForwardRequest calldata req,
@@ -110,6 +135,7 @@ contract Forwarder is Ownable, Pausable, EIP712 {
             _senderWhitelist[msg.sender],
             "Forwarder: sender of meta-transaction is not whitelisted"
         );
+
         require(
             _verify(req, v, r, s),
             "Forwarder: signature does not match request"
