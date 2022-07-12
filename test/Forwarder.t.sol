@@ -18,8 +18,10 @@ contract ForwarderTest is Test {
     address internal spender;
 
     function setUp() public {
+        // address: 0xce71065d4017f316ec606fe4422e11eb2c47c246
         cont = new Contract();
         forwarder = new Forwarder("name", "1.0");
+
         sigUtils = new SigUtils(forwarder.DOMAIN_SEPARATOR());
 
         userPrivateKey = 0xA11CE;
@@ -28,6 +30,10 @@ contract ForwarderTest is Test {
 
         user = vm.addr(userPrivateKey);
         spender = vm.addr(spenderPrivateKey);
+        // 0xe05fcc23807536bee418f142d19fa0d21bb0cff7
+        emit log_address(user);
+        // 0x185a4dc360ce69bdccee33b3784b0282f7961aea
+        emit log_address(address(forwarder));
     }
 
     function test_canExecuteWhenInputIsCorrect() public {

@@ -8,7 +8,7 @@ const alchemyApiKey = process.env.ALCHEMY_KEY;
 console.log({ alchemyApiKey });
 
 // This is the NFT contract we want to watch.
-const contractAddress = "0x3246D2625cd6224fAD067731Ccf5a65440a75433";
+const contractAddress = "0x8ED88E27521BeCBB3f70477da6b9eB4680548469";
 
 // Initialize alchemy-web3 object.
 // Docs: https://docs.alchemy.com/alchemy/documentation/subscription-api-websockets
