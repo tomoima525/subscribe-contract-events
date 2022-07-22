@@ -22,7 +22,7 @@ export const genSignature = async ({
   };
 
   const types = {
-    FowardRequest: [
+    ForwardRequest: [
       {
         internalType: "address",
         name: "from",
